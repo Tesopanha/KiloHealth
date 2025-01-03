@@ -1,14 +1,11 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:kilo_health/feature/connection/connectivity_controller.dart';
-
 import 'package:kilo_health/feature/home/controller/home_controller.dart';
-
 import 'package:kilo_health/feature/home/model/home_model.dart';
 import 'package:kilo_health/route/route.dart';
-
 import 'package:kilo_health/component/text_widget.dart';
 
 class HomeScreen extends GetView<HomeController> {
@@ -19,17 +16,32 @@ class HomeScreen extends GetView<HomeController> {
     final connectivityController = Get.find<ConnectivityController>();
     return Scaffold(
       appBar: AppBar(
-        leading: Image.asset(
-          'assets/icons/image2.png',
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.lightBlue.shade100,
+            ),
+            child: const Icon(
+              Icons.person,
+              color: Colors.blue,
+              size: 26,
+            ),
+          ),
         ),
         actions: [
-          IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.notifications,
-                color: Colors.blue,
-                size: 40,
-              ))
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.notifications,
+                  color: Colors.blue,
+                  size: 30,
+                )),
+          )
         ],
       ),
       body: RefreshIndicator(
@@ -41,7 +53,7 @@ class HomeScreen extends GetView<HomeController> {
           await connectivityController.refreshData();
         },
         child: ListView(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             children: [
               _searchButton(context),
               const SizedBox(
@@ -64,7 +76,7 @@ class HomeScreen extends GetView<HomeController> {
                 height: 16,
               ),
               const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8),
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 child: BigText(
                   text: "Categories",
                   fontWeight: FontWeight.bold,
@@ -81,7 +93,7 @@ class HomeScreen extends GetView<HomeController> {
                 height: 20,
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Column(
                   children: [
                     _buildGridItems(),
@@ -98,7 +110,7 @@ class HomeScreen extends GetView<HomeController> {
     return GestureDetector(
       onTap: () => Get.toNamed(AppRoute.search),
       child: Container(
-        margin: const EdgeInsets.only(left: 16, right: 16),
+        margin: const EdgeInsets.only(left: 14, right: 14),
         padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
         height: 50,
         width: double.infinity,
@@ -137,46 +149,47 @@ class HomeScreen extends GetView<HomeController> {
       }
 
       return ListView.separated(
-          padding: const EdgeInsets.only(left: 8, right: 8),
+          padding: const EdgeInsets.only(left: 10, right: 10),
           scrollDirection: Axis.horizontal,
           separatorBuilder: (context, index) => const SizedBox(width: 15),
           itemCount: controller.categories.length,
           itemBuilder: (context, index) {
             var category = controller.categories[index];
-            bool isSelected =
-                controller.selectedCategory.value == category.order;
+            // bool isSelected =
+            //     controller.selectedCategory.value == category.order;
 
             return InkWell(
-              onTap: () {
-                controller.setCategory(category);
-              },
-              child: Container(
-                width: 110,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(width: 1),
-                  color: isSelected ? Colors.blue : Colors.white,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.network(
-                      category.icon!,
-                      errorBuilder: (BuildContext context, Object error,
-                          StackTrace? stackTrace) {
-                        // Return a placeholder image when there's an error loading the network image
-                        return const Icon(Icons
-                            .error); // Replace with your placeholder image path
-                      },
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    SmallText(
-                      text: category.name,
-                      color: isSelected ? Colors.white : Colors.black,
-                    ),
-                  ],
+              onTap: () {},
+              child: InkWell(
+                onTap: () {},
+                child: Container(
+                  width: 110,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(width: 1),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.network(
+                        category.icon!,
+                        errorBuilder: (BuildContext context, Object error,
+                            StackTrace? stackTrace) {
+                          // Return a placeholder image when there's an error loading the network image
+                          return const Icon(Icons
+                              .error); // Replace with your placeholder image path
+                        },
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      SmallText(
+                        text: category.name,
+                        color: Colors.black,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
@@ -185,22 +198,37 @@ class HomeScreen extends GetView<HomeController> {
   }
 
   Widget _buildGridItems() {
-    return Obx(
-      () => GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 10,
-          mainAxisSpacing: 10,
-          mainAxisExtent: 180,
-        ),
-        itemCount: controller.filterBlogPosts.length,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemBuilder: (context, index) {
-          var detail = controller.filterBlogPosts[index];
-          return _buildGridItem(detail);
-        },
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Obx(() {
+          final posts = controller.filterBlogPosts;
+          return StaggeredGridView.countBuilder(
+            crossAxisCount: 2,
+            crossAxisSpacing: 10,
+            mainAxisSpacing: 10,
+            itemCount: posts.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            staggeredTileBuilder: (int index) {
+              final detail = posts[index];
+              final textSpan = TextSpan(
+                text: detail.name,
+              );
+              final textPainter = TextPainter(
+                text: textSpan,
+                maxLines: 2,
+                textDirection: TextDirection.ltr,
+              )..layout(maxWidth: (constraints.maxWidth - 10) / 2);
+
+              final lines = textPainter.computeLineMetrics().length;
+              final heightRatio = lines > 1 ? 0.8 : 0.7;
+
+              return StaggeredTile.count(1, heightRatio);
+            },
+            itemBuilder: (context, index) => _buildGridItem(posts[index]),
+          );
+        });
+      },
     );
   }
 
@@ -259,20 +287,14 @@ class HomeScreen extends GetView<HomeController> {
               ],
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8),
-                  child: BigText(
-                    text: detail.name,
-                    fontSize: 20,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                   child: SmallText(
-                    text: detail.description,
-                    color: Colors.grey,
-                    fontSize: 18,
+                    text: detail.name,
+                    fontSize: 16,
+                    maxLines: 2,
                   ),
                 ),
               ],
@@ -411,7 +433,7 @@ class HomeScreen extends GetView<HomeController> {
   Widget fadeInImage(BuildContext context, String imagePath, double opacity,
       {Duration duration = const Duration(milliseconds: 500)}) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(12.0),
       child: AnimatedOpacity(
           duration: duration,
           opacity: opacity,

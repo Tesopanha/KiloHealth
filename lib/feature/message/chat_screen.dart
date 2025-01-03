@@ -144,18 +144,9 @@ class _ChatScreenState extends State<ChatScreen> {
     return AppBar(
       elevation: 1,
       backgroundColor: Colors.white,
-      leading: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.blue.shade50,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: IconButton(
-            onPressed: () => Get.back(),
-            icon: const Icon(Icons.arrow_back, color: Colors.blue),
-          ),
-        ),
+      leading: IconButton(
+        onPressed: () => Get.back(),
+        icon: const Icon(Icons.arrow_back),
       ),
       title: Row(
         children: [

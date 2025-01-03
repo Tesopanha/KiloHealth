@@ -32,6 +32,7 @@ class NotificationScreen extends GetView<NotificationController> {
                 text: "Clear All",
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
+                fontSize: 16,
               ))
         ],
       ),
@@ -41,23 +42,21 @@ class NotificationScreen extends GetView<NotificationController> {
                 child:
                     Center(child: Image.asset("assets/icons/empty_logo.png")),
               )
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: ListView.separated(
-                  itemCount: controller.notificationData.length,
-                  separatorBuilder: (context, index) => const SizedBox(
-                    height: 10,
-                    child: Divider(
-                      thickness: 1,
-                      color: Colors.grey,
-                    ),
+            : ListView.separated(
+                padding: const EdgeInsets.all(10),
+                itemCount: controller.notificationData.length,
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 18,
+                  child: Divider(
+                    thickness: 1,
+                    color: Colors.grey,
                   ),
-                  itemBuilder: (context, index) {
-                    var notificationData = controller.notificationData[index];
-
-                    return _buildNotificationItem(context, notificationData);
-                  },
                 ),
+                itemBuilder: (context, index) {
+                  var notificationData = controller.notificationData[index];
+
+                  return _buildNotificationItem(context, notificationData);
+                },
               ),
       ),
     );
@@ -65,36 +64,54 @@ class NotificationScreen extends GetView<NotificationController> {
 
   Widget _buildNotificationItem(BuildContext context, NotificationData detail) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-            height: 100, width: 100, child: Image.network(detail.thumbnail)),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            height: 90,
+            width: 140,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade100,
+            ),
+            child: Image.network(
+              detail.thumbnail,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  Icon(Icons.image_not_supported, color: Colors.grey.shade400),
+            ),
+          ),
+        ),
         const SizedBox(width: 10),
         Expanded(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(
+                height: 5,
+              ),
               BigText(
                 text: detail.name,
-                fontSize: 18,
-                overflow: TextOverflow.clip,
+                fontSize: 16,
               ),
               const SizedBox(
-                height: 10,
+                height: 8,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SmallText(
-                    text: detail.createdAt,
-                    fontSize: 16,
+                  Icon(
+                    Icons.access_time,
+                    size: 16,
                     color: Colors.grey.shade600,
                   ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.delete_outline_sharp))
+                  const SizedBox(width: 4),
+                  SmallText(
+                    text: detail.createdAt,
+                    fontSize: 14,
+                    color: Colors.grey.shade600,
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),
