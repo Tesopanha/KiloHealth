@@ -11,21 +11,38 @@ class MessageScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Image.asset("assets/icons/image2.png"),
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 4),
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.lightBlue.shade100,
+            ),
+            child: const Icon(
+              Icons.person,
+              color: Colors.blue,
+              size: 26,
+            ),
+          ),
+        ),
         actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.notifications,
-                color: Colors.blueAccent.shade200,
-                size: 40,
-              ))
+          Padding(
+            padding: const EdgeInsets.only(right: 4),
+            child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.notifications,
+                  color: Colors.blue,
+                  size: 30,
+                )),
+          )
         ],
       ),
       body: ListView(
         children: [
           const Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(10),
             child: BigText(
               text: "Emergency consult with your recommended doctor",
               fontWeight: FontWeight.bold,
@@ -38,7 +55,7 @@ class MessageScreen extends StatelessWidget {
           ),
           SizedBox(height: 90, child: _buildChatProfile(context)),
           const Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(10),
             child: BigText(
               text: "All Messages",
               fontSize: 24,
@@ -56,7 +73,7 @@ class MessageScreen extends StatelessWidget {
 
   Widget _buildChatProfile(BuildContext context) {
     return ListView.separated(
-      padding: const EdgeInsets.only(left: 8, right: 8),
+      padding: const EdgeInsets.only(left: 10, right: 10),
       shrinkWrap: true,
       scrollDirection: Axis.horizontal,
       itemCount: MessageModel.chatList.length,
@@ -106,7 +123,7 @@ class MessageScreen extends StatelessWidget {
   Widget _buildChatItem(String imgPath, String name, String lastMessage,
       String time, bool isNew) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8),
+      padding: const EdgeInsets.only(left: 10, right: 10),
       child: InkWell(
         onTap: () => Get.toNamed(AppRoute.chat,
             arguments: {'name': name, 'image': imgPath}),

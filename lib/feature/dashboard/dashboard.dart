@@ -21,32 +21,30 @@ class DashBoard extends GetView<NavigateController> {
           onTap: (index) {
             controller.changeScreenIndex(index);
           },
+          selectedLabelStyle: const TextStyle(fontSize: 12),
+          iconSize: 24,
           items: const [
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.home_outlined,
-                size: 24,
               ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.message_outlined,
-                size: 24,
               ),
-              label: 'Message',
+              label: 'Messages',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.notifications,
-                size: 24,
               ),
               label: 'Notifications',
             ),
             BottomNavigationBarItem(
               icon: Icon(
                 Icons.person,
-                size: 24,
               ),
               label: 'Profile',
             ),

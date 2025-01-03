@@ -7,6 +7,7 @@ class BigText extends StatelessWidget {
   final double fontSize;
   final FontWeight fontWeight;
   final TextOverflow overflow;
+  final int maxLines;
 
   const BigText({
     super.key,
@@ -15,6 +16,7 @@ class BigText extends StatelessWidget {
     this.fontSize = 24,
     this.fontWeight = FontWeight.normal,
     this.overflow = TextOverflow.ellipsis,
+    this.maxLines = 1,
   });
 
   @override
@@ -22,6 +24,7 @@ class BigText extends StatelessWidget {
     return Text(
       text,
       overflow: overflow,
+      maxLines: maxLines,
       style: TextStyle(
         color: color,
         fontSize: fontSize,
@@ -38,12 +41,14 @@ class SmallText extends StatelessWidget {
   final double fontSize;
   final FontWeight fontWeight;
   final TextOverflow overflow;
+  final int maxLines;
   const SmallText(
       {super.key,
       required this.text,
       this.color = Colors.black,
       this.fontSize = 14,
       this.fontWeight = FontWeight.normal,
+      this.maxLines = 1,
       this.overflow = TextOverflow.ellipsis});
 
   @override
@@ -51,6 +56,7 @@ class SmallText extends StatelessWidget {
     return Text(
       text,
       overflow: overflow,
+      maxLines: maxLines,
       style: TextStyle(
         color: color,
         fontSize: fontSize,
